@@ -1,0 +1,123 @@
+# Package generated configuration file + custom updates
+# See the sshd_config(5) manpage for details
+
+# What ports, IPs and protocols we listen for
+Port 22
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+Protocol 2
+# HostKeys for protocol version 2
+# Supported HostKey algorithms by order of preference.
+HostKey /etc/ssh/ssh_host_ed25519_key
+# HostKey /etc/ssh/ssh_host_rsa_key
+# HostKey /etc/ssh/ssh_host_ecdsa_key
+
+#Privilege Separation is turned on for security (will always be on now)
+
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com
+MACs hmac-sha2-512-etm@openssh.com
+
+# Logging
+SyslogFacility AUTH
+LogLevel VERBOSE
+
+# Authentication:
+LoginGraceTime 60
+StrictModes yes
+MaxAuthTries 10
+MaxSessions 5
+
+# Root login is not allowed for auditing reasons. This is because it's difficult to track which process belongs to which root user:
+#
+# On Linux, user sessions are tracking using a kernel-side session id, however, this session id is not recorded by OpenSSH.
+# Additionally, only tools such as systemd and auditd record the process session id.
+# On other OSes, the user session id is not necessarily recorded at all kernel-side.
+# Using regular users in combination with /bin/su or /usr/bin/sudo ensure a clear audit track.
+PermitRootLogin no
+
+Compression no
+
+# Password based logins are disabled - only public key based logins are allowed.
+AuthenticationMethods publickey
+
+PubkeyAuthentication yes
+AuthorizedKeysFile	%h/.ssh/authorized_keys
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+# similar for protocol version 2
+HostbasedAuthentication no
+# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
+IgnoreUserKnownHosts yes
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication no
+
+# Kerberos options
+KerberosAuthentication no
+#KerberosGetAFSToken no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+
+# GSSAPI options
+GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding {% if inventory_hostname in groups['workstations'] %}yes{% else %}no{% endif %}
+
+X11DisplayOffset 10
+PrintMotd no
+{% if ansible_distribution != 'FreeBSD' %}
+PrintLastLog yes
+{% endif %}
+TCPKeepAlive yes
+PermitTunnel no
+UseDNS yes
+PidFile {{ sshd_pid_file }}
+#MaxStartups 10:30:100
+ClientAliveCountMax 2
+
+#MaxStartups 10:30:60
+#Banner /etc/issue.net
+{% if ansible_distribution == 'Debian' %}
+DebianBanner no
+{% endif %}
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+{% if ansible_distribution == 'FreeBSD' %}
+# override default of no subsystems
+Subsystem      sftp    /usr/libexec/sftp-server
+{% else %}
+# Log sftp level file access (read/write/etc.) that would not be easily logged otherwise.
+Subsystem sftp /usr/lib/openssh/sftp-server -f AUTHPRIV -l INFO
+{% endif %}
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM yes
+
+# Allow the use of the NONE cipher.
+#NoneEnabled no
+
+# Allow admin users
+AllowGroups oline sleroy jmaurin debian

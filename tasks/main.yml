@@ -1,0 +1,5 @@
+---
+- name: "Handling openssh-server role"
+  ansible.builtin.import_tasks: sshd.yml
+  tags:
+    - sshd

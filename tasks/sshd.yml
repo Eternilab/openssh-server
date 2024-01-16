@@ -1,0 +1,81 @@
+---
+- name: Be sure sshd is installed (APT based)
+  ansible.builtin.apt:
+    pkg: 'openssh-server'
+    state: present
+  when: ansible_pkg_mgr == 'apt'
+  become: true
+  tags:
+    - install
+
+# Part of the base package
+# - name: Be sure sshd is installed (FreeBSD based)
+#   pkgng: name='ssh' state=present
+#   when: ansible_pkg_mgr == 'pkgng'
+#   become: true
+#   tags: sshd
+
+- name: Be sure sshd is configured
+  ansible.builtin.template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: '0644'
+  become: true
+  notify:
+    - Restart sshd
+  tags:
+    - conf
+
+# All Diffie-Hellman moduli in use should be at least 3072-bit-long
+# (they are used for diffie-hellman-group-exchange-sha256) as per our
+# Key management Guidelines recommendations. See also man moduli.
+#
+# To deactivate short moduli in two commands:
+# awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
+
+- name: Install motd, issue and issue.net
+  ansible.builtin.template:
+    src: "etc/{{ item }}"
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: "{{ root_group }}"
+    mode: '0644'
+  with_items: "{{ motd_files }}"
+  become: true
+  notify:
+    - Restart sshd
+  tags:
+    - conf
+
+- name: Be sure sshd is running and enabled (Debian)
+  ansible.builtin.service:
+    name: ssh
+    state: started
+    enabled: true
+  when: ansible_distribution == 'Debian'
+  become: true
+  tags:
+    - conf
+
+- name: Be sure sshd is running and enabled (FreeBSD)
+  ansible.builtin.service:
+    name: sshd
+    state: started
+    enabled: true
+  when: ansible_distribution == 'FreeBSD'
+  become: true
+  tags:
+    - conf
+
+# ### Post-configuration
+# - name: Be sure sshd local key has been set for corresponding users
+#   template:
+#     src: authorized_keys.j2
+#     dest: "/home/{{ item }}/.ssh/authorized_keys"
+#     owner: "{{ item }}"
+#     group: "{{ item }}"
+#     mode: '0400'
+#   with_items: "{{ sshd_users }}"
+#   become: true
+#   tags:
+#     - conf
