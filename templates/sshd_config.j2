@@ -4,20 +4,28 @@
 # What ports, IPs and protocols we listen for
 Port 22
 # Use these options to restrict which interfaces/protocols sshd will bind to
-#ListenAddress ::
-#ListenAddress 0.0.0.0
+
+### Conforme R25 Guide SSH ANSSI
+ListenAddress {{ ansible_default_ipv6.address }}
+ListenAddress {{ ansible_default_ipv4.address }}
+
+### Conforme R1 Guide SSH ANSSI
 Protocol 2
 # HostKeys for protocol version 2
 # Supported HostKey algorithms by order of preference.
+
 HostKey /etc/ssh/ssh_host_ed25519_key
 # HostKey /etc/ssh/ssh_host_rsa_key
 # HostKey /etc/ssh/ssh_host_ecdsa_key
 
-#Privilege Separation is turned on for security (will always be on now)
+# Privilege Separation is turned on for security (will always be on now)
 
 KexAlgorithms curve25519-sha256@libssh.org
+
+### Conforme R15 Guide SSH ANSSI
 Ciphers chacha20-poly1305@openssh.com
 MACs hmac-sha2-512-etm@openssh.com
+### Fin conformité R15
 
 # Logging
 SyslogFacility AUTH
@@ -25,10 +33,13 @@ LogLevel VERBOSE
 
 # Authentication:
 LoginGraceTime 60
+
+### Conforme R14 Guide SSH ANSSI
 StrictModes yes
 MaxAuthTries 10
 MaxSessions 5
 
+### Conforme R20 Guide SSH ANSSI
 # Root login is not allowed for auditing reasons. This is because it's difficult to track which process belongs to which root user:
 #
 # On Linux, user sessions are tracking using a kernel-side session id, however, this session id is not recorded by OpenSSH.
@@ -40,6 +51,7 @@ PermitRootLogin no
 Compression no
 
 # Password based logins are disabled - only public key based logins are allowed.
+### Conforme R17 Guide ANSSI
 AuthenticationMethods publickey
 
 PubkeyAuthentication yes
@@ -52,6 +64,7 @@ HostbasedAuthentication no
 # Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
 IgnoreUserKnownHosts yes
 
+### Conforme R18 Guide SSH ANSSI
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
 PermitEmptyPasswords no
 
@@ -82,6 +95,8 @@ PrintMotd no
 PrintLastLog yes
 {% endif %}
 TCPKeepAlive yes
+
+### Conforme R5 Guide SSH ANSSI
 PermitTunnel no
 UseDNS yes
 PidFile {{ sshd_pid_file }}
@@ -119,5 +134,8 @@ UsePAM yes
 # Allow the use of the NONE cipher.
 #NoneEnabled no
 
+### Conforme R22 Guide SSH ANSSI
 # Allow admin users
-AllowGroups oline sleroy jmaurin debian
+AllowUsers oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif %}
+AllowGroups oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif %}
+### Fin conformité R22
