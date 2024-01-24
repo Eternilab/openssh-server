@@ -1,13 +1,17 @@
 # Package generated configuration file + custom updates
 # See the sshd_config(5) manpage for details
 
+### Non Conforme R26 : inutile dans notre cas. Provoque plus de problèmes qu'autre chose
 # What ports, IPs and protocols we listen for
 Port 22
 # Use these options to restrict which interfaces/protocols sshd will bind to
 
 ### Conforme R25 Guide SSH ANSSI
-ListenAddress {{ ansible_default_ipv6.address }}
-ListenAddress {{ ansible_default_ipv4.address }}
+ListenAddress {{ ansible_facts['default_ipv4'].address }}
+{% if ansible_facts['default_ipv6'].address is defined %}
+ListenAddress {{ ansible_facts['default_ipv6'].address }}
+### Fin conformité R25
+{% endif %}
 
 ### Conforme R1 Guide SSH ANSSI
 Protocol 2
@@ -26,6 +30,10 @@ KexAlgorithms curve25519-sha256@libssh.org
 Ciphers chacha20-poly1305@openssh.com
 MACs hmac-sha2-512-etm@openssh.com
 ### Fin conformité R15
+
+### Conforme R23 Guide SSH ANSSI
+# Users do not have the right to bring their environment variables when connecting.
+PermitUserEnvironment no
 
 # Logging
 SyslogFacility AUTH
@@ -86,9 +94,10 @@ GSSAPIAuthentication no
 #GSSAPICleanupCredentials yes
 
 AllowAgentForwarding no
-AllowTcpForwarding no
-X11Forwarding {% if inventory_hostname in groups['workstations'] %}yes{% else %}no{% endif %}
-
+### Conforme R27 Guide SSH ANSSI
+AllowTcpForwarding {% if inventory_hostname in groups['postes_admin'] %}yes{% else %}no{% endif +%}
+### Conforme R28 Guide SSH ANSSI, on modifiera au cas par cas.
+X11Forwarding no
 X11DisplayOffset 10
 PrintMotd no
 {% if ansible_distribution != 'FreeBSD' %}
@@ -136,6 +145,6 @@ UsePAM yes
 
 ### Conforme R22 Guide SSH ANSSI
 # Allow admin users
-AllowUsers oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif %}
-AllowGroups oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif %}
+AllowUsers oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif +%}
+AllowGroups oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif +%}
 ### Fin conformité R22
