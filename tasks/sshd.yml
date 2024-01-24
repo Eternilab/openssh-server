@@ -23,7 +23,7 @@
     group: "{{ root_group }}"
     mode: '0600'
     validate: /usr/sbin/sshd -t -f %s
-    backup: yes
+    backup: true
   become: true
   notify:
     - Restart sshd
