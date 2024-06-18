@@ -30,6 +30,20 @@
   tags:
     - conf
 
+#- name: Be sure sshd starts only after all NetworkManager connections are active
+#  ansible.builtin.template:
+#    src: etc/systemd/system/sshd.service.d/network-online.conf
+#    dest: /etc/systemd/system/sshd.service.d/network-online.conf
+#    owner: root
+#    group: "{{ root_group }}"
+#    mode: '0600'
+#  become: true
+#  notify:
+#    - Systemd daemon-reload
+#    - Restart sshd
+#  tags:
+#    - conf
+
 # All Diffie-Hellman moduli in use should be at least 3072-bit-long
 # (they are used for diffie-hellman-group-exchange-sha256) as per our
 # Key management Guidelines recommendations. See also man moduli.
