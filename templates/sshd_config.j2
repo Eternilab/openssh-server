@@ -7,11 +7,13 @@ Port 22
 # Use these options to restrict which interfaces/protocols sshd will bind to
 
 ### Conforme R25 Guide SSH ANSSI
-ListenAddress {{ ansible_facts['default_ipv4'].address }}
-{% if ansible_facts['default_ipv6'].address is defined %}
-ListenAddress {{ ansible_facts['default_ipv6'].address }}
-### Fin conformité R25
+{% if sshd_ipv4 is defined %}
+ListenAddress {{ sshd_ipv4 }}
 {% endif %}
+{% if sshd_ipv6 is defined %}
+ListenAddress {{ sshd_ipv6 }}
+{% endif %}
+### Fin conformité R25
 
 ### Conforme R1 Guide SSH ANSSI
 Protocol 2
@@ -42,7 +44,7 @@ LogLevel VERBOSE
 # Authentication:
 LoginGraceTime 60
 
-### Conforme R14 Guide SSH ANSSI
+### Conforme R14 Guide SSH ANSSI
 StrictModes yes
 MaxAuthTries 10
 MaxSessions 5
@@ -113,7 +115,7 @@ PidFile {{ sshd_pid_file }}
 ClientAliveCountMax 2
 
 #MaxStartups 10:30:60
-#Banner /etc/issue.net
+Banner none
 {% if ansible_distribution == 'Debian' %}
 DebianBanner no
 {% endif %}
@@ -141,10 +143,14 @@ Subsystem sftp /usr/lib/openssh/sftp-server -f AUTHPRIV -l INFO
 UsePAM yes
 
 # Allow the use of the NONE cipher.
-#NoneEnabled no
+# NoneEnabled no
 
 ### Conforme R22 Guide SSH ANSSI
-# Allow admin users
-AllowUsers oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif +%}
-AllowGroups oline sleroy jmaurin debian {% if inventory_hostname in groups['formation'] %}local{% endif +%}
+# Allow admin users only
+{% if sshd_allowed_users is defined %}
+AllowUsers {{ sshd_allowed_users }}
+{% endif %}
+{% if sshd_allowed_groups is defined %}
+AllowGroups {{ sshd_allowed_groups }}
+{% endif %}
 ### Fin conformité R22

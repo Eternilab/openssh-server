@@ -1,11 +1,13 @@
 ---
-sshd_users:
-  "{{ ansible_user }}":
-    keys:
-      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILUqahhw+L/o1aGeTWObyhNA5/LUMSuJOYQ2YpOC5ASB user@Exces"
-      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgqltXgv64FJepT9qL6e7V88iQXv5h6CcG8ToJaeBwo jmaurin@GranoLAX"
-      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGAot7fxAy+3Jhjs7mOYvTQRA37VAyYbDo05+1dEPegN oline@whaou"
 motd_files:
   - issue
   - issue.net
   - motd
+
+# IPs addresses on which sshd must listen
+sshd_ipv4: "{{ ansible_facts['default_ipv4'].address }}"
+sshd_ipv6: "{{ ansible_facts['default_ipv6'].address }}"
+
+# To add users and groups limitations
+# sshd_allowed_users:
+# sshd_allowed_groups:
