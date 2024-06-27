@@ -30,19 +30,18 @@
   tags:
     - conf
 
-# - name: Be sure sshd starts only after all NetworkManager connections are active
-#   ansible.builtin.template:
-#     src: etc/systemd/system/sshd.service.d/network-online.conf
-#     dest: /etc/systemd/system/sshd.service.d/network-online.conf
-#     owner: root
-#     group: "{{ root_group }}"
-#     mode: '0600'
-#   become: true
-#   notify:
-#     - Systemd daemon-reload
-#     - Restart sshd
-#   tags:
-#     - conf
+- name: (On Workstations) Be sure sshd is able to start even if the administration network interface is not available yet
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: '1'
+    sysctl_file: /etc/sysctl.d/10-sshd-admin.conf
+    sysctl_set: true
+  become: true
+  when: inventory_hostname in groups['workstations']
+  notify:
+    - Restart sshd
+  tags:
+    - conf
 
 # All Diffie-Hellman moduli in use should be at least 3072-bit-long
 # (they are used for diffie-hellman-group-exchange-sha256) as per our
