@@ -97,7 +97,11 @@ GSSAPIAuthentication no
 
 AllowAgentForwarding no
 ### Conforme R27 Guide SSH ANSSI
-AllowTcpForwarding {% if inventory_hostname in groups['postes_admin'] %}yes{% else %}no{% endif +%}
+{% if inventory_hostname in groups['postes_admin'] %}
+AllowTcpForwarding yes
+{% else %}
+AllowTcpForwarding no
+{% endif %}
 ### Conforme R28 Guide SSH ANSSI, on modifiera au cas par cas.
 X11Forwarding no
 X11DisplayOffset 10
