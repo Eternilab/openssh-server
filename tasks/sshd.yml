@@ -30,16 +30,12 @@
   tags:
     - conf
 
-- name: (On Workstations) Be sure sshd is able to start even if the administration network interface is not available yet
-  ansible.posix.sysctl:
-    name: net.ipv4.ip_nonlocal_bind
-    value: '1'
-    sysctl_file: /etc/sysctl.d/10-sshd-admin.conf
-    sysctl_set: true
+- name: TEMPORARY Remove old sysclt file
+  ansible.builtin.file:
+    path: /etc/sysctl.d/10-sshd-admin.conf
+    state: absent
   become: true
   when: inventory_hostname in groups['workstations']
-  notify:
-    - Restart sshd
   tags:
     - conf
 
