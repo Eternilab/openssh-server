@@ -3,3 +3,7 @@
   ansible.builtin.import_tasks: sshd.yml
   tags:
     - sshd
+- name: "Getting SSHFP information for DNS"
+  ansible.builtin.import_tasks: sshfp.yml
+  tags:
+    - sshd
