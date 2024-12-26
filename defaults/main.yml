@@ -8,6 +8,13 @@ motd_files:
 sshd_ipv4: "{{ ansible_facts['default_ipv4'].address }}"
 sshd_ipv6: "{{ ansible_facts['default_ipv6'].address }}"
 
+# Path to PID file (default to Debian target)
+sshd_pid_file: /var/run/sshd.pid
+
+###
+# User variables
+###
+
 # To add users and groups limitations
 # sshd_allowed_users:
 # sshd_allowed_groups:

@@ -1,5 +1,6 @@
 ---
-- name: Be sure sshd is installed (APT based)
+### Installation
+- name: "Be sure sshd is installed (APT based)"
   ansible.builtin.apt:
     pkg: 'openssh-server'
     state: present
@@ -15,7 +16,8 @@
 #   become: true
 #   tags: sshd
 
-- name: Be sure sshd is configured
+### Configuration
+- name: "Be sure sshd is configured"
   ansible.builtin.template:
     src: sshd_config.j2
     dest: /etc/ssh/sshd_config
@@ -30,7 +32,20 @@
   tags:
     - conf
 
-- name: TEMPORARY Remove old sysclt file
+# Maybe should be removed and should use systemd.tmpfiles ?
+- name: "Be sure sshd has its directory configured"
+  ansible.builtin.file:
+    path: /run/sshd
+    state: directory
+    owner: root
+    group: "{{ root_group }}"
+    mode: '0755'
+  become: true
+  tags:
+    - conf
+
+# FIXME THIS SHOULD BE REMOVED
+- name: "TEMPORARY Remove old sysclt file"
   ansible.builtin.file:
     path: /etc/sysctl.d/10-sshd-admin.conf
     state: absent
@@ -46,7 +61,7 @@
 # To deactivate short moduli in two commands:
 # awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
-- name: Install motd, issue and issue.net
+- name: "Install motd, issue and issue.net"
   ansible.builtin.template:
     src: "etc/{{ item }}"
     dest: "/etc/{{ item }}"
@@ -62,7 +77,7 @@
 
 # Generate an OpenSSH keypair with a different algorithm
 - name: "Generate ed25519 key pair for host keys"
-  openssh_keypair:
+  community.crypto.openssh_keypair:
     path: /etc/ssh/ssh_host_ed25519_key
     type: ed25519
     owner: root
@@ -85,7 +100,7 @@
   tags:
     - conf
 
-- name: Be sure sshd is running and enabled (Debian)
+- name: "Be sure sshd is running and enabled (Debian)"
   ansible.builtin.service:
     name: ssh
     state: started
@@ -95,7 +110,7 @@
   tags:
     - conf
 
-- name: Be sure sshd is running and enabled (FreeBSD)
+- name: "Be sure sshd is running and enabled (FreeBSD)"
   ansible.builtin.service:
     name: sshd
     state: started
