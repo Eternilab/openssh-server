@@ -39,6 +39,8 @@ PermitUserEnvironment no
 
 # Logging
 SyslogFacility AUTH
+
+# Tools like fail2ban require loglevel to be at VERBOSE to ban IPs
 LogLevel VERBOSE
 
 # Authentication:
@@ -97,11 +99,7 @@ GSSAPIAuthentication no
 
 AllowAgentForwarding no
 ### Conforme R27 Guide SSH ANSSI
-{% if inventory_hostname in groups['postes_admin'] %}
-AllowTcpForwarding yes
-{% else %}
-AllowTcpForwarding no
-{% endif %}
+AllowTcpForwarding {{ sshd_tcpforwarding }}
 ### Conforme R28 Guide SSH ANSSI, on modifiera au cas par cas.
 X11Forwarding no
 X11DisplayOffset 10

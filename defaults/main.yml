@@ -10,6 +10,7 @@ sshd_ipv6: "{{ ansible_facts['default_ipv6'].address }}"
 
 # Path to PID file (default to Debian target)
 sshd_pid_file: /var/run/sshd.pid
+sshd_tcpforwarding: "no"
 
 ###
 # User variables
