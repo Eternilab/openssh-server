@@ -13,7 +13,7 @@ stages:
 ansible-lint:
   image: registry.gitlab.com/pipeline-components/ansible-lint:latest
   stage: linter
-  # tags:
-  #   - debian
+  tags:
+    - linux
   script:
     - ansible-lint --show-relpath
