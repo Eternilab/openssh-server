@@ -1,18 +1,19 @@
-# image: registry.gitlab.com/pipeline-components/ansible-lint:latest
-image: debian:bullseye
+---
+# image: debian:bookworm
 
-before_script:
-  - apt-get update
-  - apt-get install -y python-is-python3 python3-pip
-  - pip install ansible ansible-lint
-  - ansible-lint --version
+# before_script:
+#   - apt-get update
+#   - apt-get install -y python-is-python3 python3-pip
+#   - pip install ansible ansible-lint
+#   - ansible-lint --version
 
 stages:
   - linter
 
 ansible-lint:
+  image: registry.gitlab.com/pipeline-components/ansible-lint:latest
   stage: linter
-  tags:
-    - debian
+  # tags:
+  #   - debian
   script:
     - ansible-lint --show-relpath
