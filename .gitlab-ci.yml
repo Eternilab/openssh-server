@@ -8,4 +8,5 @@ ansible-lint:
   tags:
     - linux
   script:
+    - ansible-lint --version
     - ansible-lint --show-relpath
