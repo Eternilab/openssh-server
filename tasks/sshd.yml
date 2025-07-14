@@ -13,12 +13,7 @@
   tags:
     - install
 
-# Part of the base package
-# - name: Be sure sshd is installed (FreeBSD based)
-#   pkgng: name='ssh' state=present
-#   when: ansible_pkg_mgr == 'pkgng'
-#   become: true
-#   tags: sshd
+# Part of the base package in FreeBSD
 
 ### Configuration
 - name: "Be sure sshd is configured"
@@ -79,6 +74,8 @@
   tags:
     - conf
 
+### req_ANSSI_NT_SSH_v1.3_R11
+### req_ANSSI_NT_SSH_v1.3_R12
 # Generate an OpenSSH keypair with a different algorithm
 - name: "Generate ed25519 key pair for host keys"
   community.crypto.openssh_keypair:
@@ -86,6 +83,7 @@
     type: ed25519
     owner: root
     group: "{{ root_group }}"
+    mode: '0600'
     force: false
   become: true
 

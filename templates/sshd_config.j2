@@ -21,23 +21,26 @@ ListenAddress {{ sshd_ipv6 }}
 {% endif %}
 ### Fin conformité R25
 
-### Conforme R1 Guide SSH ANSSI
+### req_ANSSI_NT_SSH_v1.3_R1
 Protocol 2
+
+### req_ANSSI_NT_SSH_v1.3_R7
 # HostKeys for protocol version 2
 # Supported HostKey algorithms by order of preference.
-
 HostKey /etc/ssh/ssh_host_ed25519_key
+
+### req_ANSSI_NT_SSH_v1.3_R8
 # HostKey /etc/ssh/ssh_host_rsa_key
+
+### req_ANSSI_NT_SSH_v1.3_R9 | req_ANSSI_NT_SSH_v1.3_R10
 # HostKey /etc/ssh/ssh_host_ecdsa_key
 
+### req_ANSSI_NT_SSH_v1.3_R16
 # Privilege Separation is turned on for security (will always be on now)
 
-KexAlgorithms curve25519-sha256@libssh.org
-
-### Conforme R15 Guide SSH ANSSI
+### req_ANSSI_NT_SSH_v1.3_R15
 Ciphers chacha20-poly1305@openssh.com
 MACs hmac-sha2-512-etm@openssh.com
-### Fin conformité R15
 
 ### Conforme R23 Guide SSH ANSSI
 # Users do not have the right to bring their environment variables when connecting.
@@ -52,8 +55,9 @@ LogLevel VERBOSE
 # Authentication:
 LoginGraceTime 60
 
-### Conforme R14 Guide SSH ANSSI
+### req_ANSSI_NT_SSH_v1.3_R14
 StrictModes yes
+
 MaxAuthTries 10
 MaxSessions 5
 
@@ -69,11 +73,11 @@ PermitRootLogin no
 Compression no
 
 # Password based logins are disabled - only public key based logins are allowed.
-### Conforme R17 Guide ANSSI
+### req_ANSSI_NT_SSH_v1.3_R17
+KexAlgorithms curve25519-sha256@libssh.org
 AuthenticationMethods publickey
-
 PubkeyAuthentication yes
-AuthorizedKeysFile	%h/.ssh/authorized_keys
+AuthorizedKeysFile %h/.ssh/authorized_keys
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts yes
