@@ -12,7 +12,7 @@ galaxy_info:
   description: Configuration du serveur OpenSSH
   min_ansible_version: "2.14"
   company: "Eternilab"
-  license: "MIT"
+  license: "CECILL-2.1"
   platforms:
     - name: Debian
       versions:

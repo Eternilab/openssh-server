@@ -14,3 +14,13 @@ ansible-lint:
   script:
     - ansible-lint --version
     - ansible-lint --show-relpath
+
+reuse:
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  stage: linter
+  tags:
+    - linux
+  script:
+    - reuse lint
