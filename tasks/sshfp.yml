@@ -6,6 +6,7 @@
 - name: "Get SSHFP records"
   ansible.builtin.command: "ssh-keygen -r {{ inventory_hostname }}."
   register: sshfp_entries
+  become: true
   changed_when: false
 
 - name: "Debug SSHFP"
