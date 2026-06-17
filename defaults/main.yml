@@ -23,3 +23,8 @@ sshd_tcpforwarding: "no"
 # To add users and groups limitations
 # sshd_allowed_users:
 # sshd_allowed_groups:
+#
+## exempt ip from penalty system
+## add ipv4 address to avoid problems with monit
+# sshd_exempt_list:
+#  - {{ ansible_facts['default_ipv4'].address }}

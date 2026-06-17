@@ -121,7 +121,10 @@ TCPKeepAlive yes
 
 ### Conforme R5 Guide SSH ANSSI
 PermitTunnel no
-UseDNS yes
+
+# Disable reverse DNS check on connexion
+UseDNS no
+
 PidFile {{ sshd_pid_file }}
 #MaxStartups 10:30:100
 ClientAliveCountMax 2
@@ -157,6 +160,12 @@ UsePAM yes
 # Allow the use of the NONE cipher.
 # NoneEnabled no
 
+{% if is define sshd_exempt_list %}
+# whitelist ip for penalty system in new ssh version
+{% for ip in sshd_exempt_list %}
+PerSourcePenaltyExemptList {{ ip }}
+{% endfor %}
+{%endif}
 ### Conforme R22 Guide SSH ANSSI
 # Allow admin users only
 {% if sshd_allowed_users is defined %}
