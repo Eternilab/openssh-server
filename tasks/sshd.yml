@@ -43,22 +43,13 @@
   tags:
     - conf
 
-# FIXME THIS SHOULD BE REMOVED
-- name: "TEMPORARY Remove old sysclt file"
-  ansible.builtin.file:
-    path: /etc/sysctl.d/10-sshd-admin.conf
-    state: absent
-  become: true
-  when: inventory_hostname in groups['workstations']
-  tags:
-    - conf
-
 # All Diffie-Hellman moduli in use should be at least 3072-bit-long
 # (they are used for diffie-hellman-group-exchange-sha256) as per our
 # Key management Guidelines recommendations. See also man moduli.
 #
 # To deactivate short moduli in two commands:
-# awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
+# awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp \
+#        && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 - name: "Install motd, issue and issue.net"
   ansible.builtin.template:

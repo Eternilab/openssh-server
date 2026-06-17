@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2026 Eternilab <support@eternilab.com>
+
+SPDX-License-Identifier: CECILL-2.1
+-->
 ---
 title: openssh-server ansible role
 ---
@@ -5,7 +10,7 @@ title: openssh-server ansible role
 
 ## Licence
 
-Ce rôle est sous licence XXX
+Ce rôle est sous licence CECILL-2.1
 
 ## Avant propos
 
@@ -15,10 +20,10 @@ Ce rôle ne garanti pas la conformité en cas de modification de ces valeurs, bi
 
 ## Description
 
-Ce rôle configure le serveur OpenSSH pour qu'il soit conforme au guide 
+Ce rôle configure le serveur OpenSSH pour qu'il soit conforme au guide
 NT_SSH de l'ANSSI :fr: :
 
-> https://cyber.gouv.fr/publications/usage-securise-dopenssh
+> https://messervices.cyber.gouv.fr/guides/usage-securise-dopenssh
 
 ---
 
