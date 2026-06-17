@@ -160,12 +160,12 @@ UsePAM yes
 # Allow the use of the NONE cipher.
 # NoneEnabled no
 
-{% if is define sshd_exempt_list %}
+{% if sshd_exempt_list s defined %}
 # whitelist ip for penalty system in new ssh version
 {% for ip in sshd_exempt_list %}
 PerSourcePenaltyExemptList {{ ip }}
 {% endfor %}
-{%endif}
+{% endif %}
 ### Conforme R22 Guide SSH ANSSI
 # Allow admin users only
 {% if sshd_allowed_users is defined %}
